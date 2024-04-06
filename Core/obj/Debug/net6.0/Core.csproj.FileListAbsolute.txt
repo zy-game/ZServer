@@ -1,0 +1,15 @@
+D:\ZGame\ZServer\Core\bin\Debug\net6.0\Core.deps.json
+D:\ZGame\ZServer\Core\bin\Debug\net6.0\Core.dll
+D:\ZGame\ZServer\Core\bin\Debug\net6.0\Core.pdb
+D:\ZGame\ZServer\Core\obj\Debug\net6.0\Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\ZGame\ZServer\Core\obj\Debug\net6.0\Core.AssemblyInfoInputs.cache
+D:\ZGame\ZServer\Core\obj\Debug\net6.0\Core.AssemblyInfo.cs
+D:\ZGame\ZServer\Core\obj\Debug\net6.0\Core.csproj.CoreCompileInputs.cache
+D:\ZGame\ZServer\Core\obj\Debug\net6.0\Core.sourcelink.json
+D:\ZGame\ZServer\Core\obj\Debug\net6.0\Core.dll
+D:\ZGame\ZServer\Core\obj\Debug\net6.0\refint\Core.dll
+D:\ZGame\ZServer\Core\obj\Debug\net6.0\Core.pdb
+D:\ZGame\ZServer\Core\obj\Debug\net6.0\ref\Core.dll
+D:\ZGame\ZServer\Core\obj\Debug\net6.0\Core.csproj.AssemblyReference.cache
+D:\ZGame\ZServer\Core\bin\Debug\net6.0\reedsolomon_csharp.dll
+D:\ZGame\ZServer\Core\obj\Debug\net6.0\Core.csproj.CopyComplete

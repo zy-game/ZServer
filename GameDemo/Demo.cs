@@ -1,16 +1,31 @@
+using DotNetty.Buffers;
 using ZServer;
 
 namespace GameDemo;
 
 public class Demo : IServer
 {
-    public void Dispose()
+    public uint id { get; }
+
+    public string name { get; } = "Demo";
+
+    public Task<Status> Start()
     {
-        throw new NotImplementedException();
+        return Task.FromResult(Status.Success);
     }
 
-    public void Start()
+    public Task<Status> Shutdown()
     {
-        throw new NotImplementedException();
+        return Task.FromResult(Status.Success);
+    }
+
+    public Task<IServerResult> OnMessage(Client client, IByteBuffer messaged)
+    {
+        App.Broadcast(messaged);
+        return default;
+    }
+
+    public void Release()
+    {
     }
 }
