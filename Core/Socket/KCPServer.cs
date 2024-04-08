@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using DotNetty.Buffers;
 using DotNetty.Handlers.Logging;
@@ -15,9 +16,10 @@ public class KCPServer
     private static bool isSsl = false;
     private static IChannel boundChannel;
     private static IEventLoopGroup bossGroup;
+    private static Dictionary<IChannelId, Client> clients = new();
     public static bool Started { get; private set; }
 
-    public static async Task RunServerAsync(ushort port)
+    internal static async Task RunServerAsync(ushort port)
     {
         bossGroup = new MultithreadEventLoopGroup(1);
         try
@@ -46,7 +48,7 @@ public class KCPServer
         }
     }
 
-    public static async Task Shutdown()
+    internal static async Task Shutdown()
     {
         if (boundChannel != null)
         {
@@ -61,24 +63,74 @@ public class KCPServer
         Started = false;
     }
 
-    class UDPServerHandler : ChannelHandlerAdapter
+    public static void Send(IChannelId id, int opcode, byte[] bytes)
     {
-        public override void ChannelRead(IChannelHandlerContext context, object message)
+        if (clients.TryGetValue(id, out var client) is false)
         {
-            var packet = message as DatagramPacket;
-            App.Log(string.Format("Received from client: {0}", packet.Content.ToString(Encoding.UTF8)));
+            return;
+        }
 
-            context.WriteAndFlushAsync(new DatagramPacket((IByteBuffer)packet.Content.Retain(), packet.Recipient, packet.Sender));
+        client.Send(Packet.Create(opcode, bytes));
+    }
+
+    public static void Broadcast(int opcode, byte[] bytes, params IChannelId[] ids)
+    {
+        foreach (var id in ids)
+        {
+            if (clients.TryGetValue(id, out var client) is false)
+            {
+                continue;
+            }
+
+            client.Send(Packet.Create(opcode, bytes));
+        }
+    }
+
+    class UDPServerHandler : ChannelHandlerAdapter, IWriteable
+    {
+        private IChannel _channel;
+        private EndPoint Recipient;
+        private EndPoint Sender;
+
+
+        public override async void ChannelRead(IChannelHandlerContext context, object message)
+        {
+            _channel = context.Channel;
+            var packet = message as DatagramPacket;
+            Recipient = packet.Recipient;
+            Sender = packet.Sender;
+            if (clients.TryGetValue(context.Channel.Id, out var client) is false)
+            {
+                clients.Add(context.Channel.Id, client = Client.Create(context.Channel.Id, this));
+            }
+
+            Packet frame = Packet.Deserialized(packet.Content.Array);
+            App.Log(client.id + "Receive Message:" + frame.opcode);
+            IServer server = App.GetServer(client.id);
+            if (server is null)
+            {
+                App.Log("get free server");
+                server = await App.GetFreeServer(client.id);
+            }
+
+            App.Log(client.id + "execute message:" + frame.opcode);
+            await server.OnMessage(client.id, frame.opcode, frame.Data);
+            RefPooled.Release(frame);
             if (packet != null)
                 packet.Release();
         }
 
-        //public override void ChannelReadComplete(IChannelHandlerContext context) => context.Flush();
-
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
         {
             App.Log(string.Format("Exception:{}", exception));
+            clients.Remove(context.Channel.Id);
             context.CloseAsync();
+        }
+
+        public async void WriteMessage(byte[] bytes)
+        {
+            DatagramPacket packet = new DatagramPacket(Unpooled.WrappedBuffer(bytes), Recipient, Sender);
+            await _channel?.WriteAndFlushAsync(packet);
         }
     }
 }

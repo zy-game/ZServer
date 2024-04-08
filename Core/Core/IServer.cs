@@ -1,6 +1,13 @@
 using DotNetty.Buffers;
+using DotNetty.Transport.Channels;
 
 namespace ZServer;
+
+public enum ServerState : byte
+{
+    Free,
+    Running,
+}
 
 /// <summary>
 /// 服务
@@ -9,7 +16,8 @@ public interface IServer : IReference
 {
     uint id { get; }
 
-    string name { get; }
+    ServerState state { get; }
+
 
     /// <summary>
     /// 启动服务
@@ -28,5 +36,10 @@ public interface IServer : IReference
     /// </summary>
     /// <param name="messaged"></param>
     /// <returns></returns>
-    Task<IServerResult> OnMessage(Client client, IByteBuffer messaged);
+    Task OnMessage(IChannelId cid, int opcode, byte[] messaged);
+
+    /// <summary>
+    /// 固定帧轮询
+    /// </summary>
+    void FixedUpdate();
 }

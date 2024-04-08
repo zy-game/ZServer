@@ -13,12 +13,12 @@ public class APIReceiver : APIBase
     [HttpPost("startup")]
     public async Task<string> ServerStartup()
     {
-        return JsonConvert.SerializeObject(IServerResult.Create(Status.Success, ""));
+        return default;
     }
 
     [HttpPost("shutdown")]
     public async Task<string> ServerCommand()
     {
-        return JsonConvert.SerializeObject(IServerResult.Create(Status.Success, ""));
+        return default;
     }
 }

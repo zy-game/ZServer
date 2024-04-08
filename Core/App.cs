@@ -1,14 +1,32 @@
 ﻿using System.Collections.Concurrent;
 using DotNetty.Buffers;
+using DotNetty.Transport.Channels;
 
 namespace ZServer;
 
+public sealed class ID
+{
+    private static uint _current = 0;
+    private static readonly object _lock = new object();
+
+    public static uint Generic()
+    {
+        lock (_lock)
+        {
+            return ++_current;
+        }
+    }
+}
+
 public static class App
 {
+    private static bool isRunning = false;
     public static string name { get; set; }
     public static string version { get; set; }
-    public static IServer server { get; private set; }
-    private static List<Client> clients = new();
+    public static int fixedUpdateRate { get; set; } = 30;
+
+    private static ConcurrentDictionary<IServer, List<IChannelId>> servers = new();
+    private static Type type;
 
     public static void Log(object message)
     {
@@ -27,60 +45,84 @@ public static class App
 
     public static async void Startup<T>(ushort port) where T : class, IServer, new()
     {
-        server = RefPooled.Spawner<T>();
-        server.Start();
+        type = typeof(T);
         await KCPServer.RunServerAsync(port);
+        isRunning = true;
+        Task.Run(FixedUpdate);
+        Log("服务器启动");
+    }
+
+    private static void FixedUpdate()
+    {
+        while (isRunning)
+        {
+            if (servers is null || servers.Count == 0)
+            {
+                continue;
+            }
+
+            foreach (var server in servers.Keys)
+            {
+                server.FixedUpdate();
+            }
+
+            Task.Delay(fixedUpdateRate);
+        }
     }
 
     public static void Shutdown()
     {
-        server.Shutdown();
+        isRunning = false;
+        foreach (var server in servers)
+        {
+            RefPooled.Release(server.Key);
+        }
+
+        servers.Clear();
         KCPServer.Shutdown();
-        RefPooled.Release(server);
-        server = null;
         Log("服务器关闭");
     }
 
 
-    public static void NewClient(Client client)
+    public static IServer GetServer(IChannelId id)
     {
-        clients.Add(client);
-    }
-
-    public static void RemoveClient(int id)
-    {
-        var client = GetClient(id);
-        if (client == null)
+        foreach (var server in servers)
         {
-            return;
+            if (server.Value.Contains(id))
+            {
+                return server.Key;
+            }
         }
 
-        clients.Remove(client);
-        RefPooled.Release(client);
+        return default;
     }
 
-    public static Client GetClient(int id)
+    public static async Task<IServer> GetFreeServer(IChannelId id)
     {
-        return clients.FirstOrDefault(x => x.id == id);
-    }
-
-    public static void Broadcast(IByteBuffer messaged)
-    {
-        foreach (var client in clients)
+        if (servers.Count > 0)
         {
-            client.Send(messaged.Array);
-        }
-    }
-
-    public static async void OnReceiveMessage(int id, IByteBuffer messaged)
-    {
-        var client = GetClient(id);
-        if (client == null)
-        {
-            return;
+            foreach (var VARIABLE in servers.Keys)
+            {
+                if (VARIABLE.state == ServerState.Free)
+                {
+                    return VARIABLE;
+                }
+            }
         }
 
-       IServerResult result = await server.OnMessage(client, messaged);
-       
+
+        IServer server = (IServer)RefPooled.Spawner(type);
+        servers.AddOrUpdate(server, new List<IChannelId>() { id }, (k, v) =>
+        {
+            if (v.Contains(id))
+            {
+                v.Remove(id);
+            }
+
+            v.Add(id);
+            return v;
+        });
+        await server.Start();
+        return server;
     }
 }

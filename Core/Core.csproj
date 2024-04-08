@@ -13,6 +13,7 @@
     <PackageReference Include="DotNetty.Handlers" Version="0.7.6" />
     <PackageReference Include="MemoryPack" Version="1.21.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="protobuf-net" Version="3.2.30" />
   </ItemGroup>
 
   <ItemGroup>

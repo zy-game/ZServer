@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\ZGame\\ZServer\\GameDemo\\GameDemo.csproj": {}
+    "E:\\ZServer\\GameDemo\\GameDemo.csproj": {}
   },
   "projects": {
-    "D:\\ZGame\\ZServer\\Core\\Core.csproj": {
+    "E:\\ZServer\\Core\\Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ZGame\\ZServer\\Core\\Core.csproj",
+        "projectUniqueName": "E:\\ZServer\\Core\\Core.csproj",
         "projectName": "Core",
-        "projectPath": "D:\\ZGame\\ZServer\\Core\\Core.csproj",
-        "packagesPath": "C:\\Users\\15849\\.nuget\\packages\\",
-        "outputPath": "D:\\ZGame\\ZServer\\Core\\obj\\",
+        "projectPath": "E:\\ZServer\\Core\\Core.csproj",
+        "packagesPath": "C:\\Users\\h\\.nuget\\packages\\",
+        "outputPath": "E:\\ZServer\\Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "D:\\Soft\\Microsoft Shared\\NuGetPackages"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\15849\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\h\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,7 +26,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -64,6 +63,10 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.3, )"
+            },
+            "protobuf-net": {
+              "target": "Package",
+              "version": "[3.2.30, )"
             }
           },
           "imports": [
@@ -77,43 +80,29 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[6.0.26, 6.0.26]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[6.0.26, 6.0.26]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[6.0.26, 6.0.26]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\ZGame\\ZServer\\GameDemo\\GameDemo.csproj": {
+    "E:\\ZServer\\GameDemo\\GameDemo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ZGame\\ZServer\\GameDemo\\GameDemo.csproj",
+        "projectUniqueName": "E:\\ZServer\\GameDemo\\GameDemo.csproj",
         "projectName": "GameDemo",
-        "projectPath": "D:\\ZGame\\ZServer\\GameDemo\\GameDemo.csproj",
-        "packagesPath": "C:\\Users\\15849\\.nuget\\packages\\",
-        "outputPath": "D:\\ZGame\\ZServer\\GameDemo\\obj\\",
+        "projectPath": "E:\\ZServer\\GameDemo\\GameDemo.csproj",
+        "packagesPath": "C:\\Users\\h\\.nuget\\packages\\",
+        "outputPath": "E:\\ZServer\\GameDemo\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "D:\\Soft\\Microsoft Shared\\NuGetPackages"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\15849\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\h\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -122,15 +111,14 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\ZGame\\ZServer\\Core\\Core.csproj": {
-                "projectPath": "D:\\ZGame\\ZServer\\Core\\Core.csproj"
+              "E:\\ZServer\\Core\\Core.csproj": {
+                "projectPath": "E:\\ZServer\\Core\\Core.csproj"
               }
             }
           }
@@ -155,30 +143,12 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[6.0.26, 6.0.26]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[6.0.26, 6.0.26]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[6.0.26, 6.0.26]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[6.0.26, 6.0.26]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
         }
       }
     }
