@@ -48,11 +48,11 @@ public static class App
         type = typeof(T);
         await KCPServer.RunServerAsync(port);
         isRunning = true;
-        Task.Run(FixedUpdate);
+        Task.Factory.StartNew(FixedUpdate);
         Log("服务器启动");
     }
 
-    private static void FixedUpdate()
+    private static async void FixedUpdate()
     {
         while (isRunning)
         {
@@ -66,7 +66,7 @@ public static class App
                 server.FixedUpdate();
             }
 
-            Task.Delay(fixedUpdateRate);
+            await Task.Delay(fixedUpdateRate);
         }
     }
 
@@ -97,20 +97,8 @@ public static class App
         return default;
     }
 
-    public static async Task<IServer> GetFreeServer(IChannelId id)
+    public static async Task<IServer> NewServer(IChannelId id)
     {
-        if (servers.Count > 0)
-        {
-            foreach (var VARIABLE in servers.Keys)
-            {
-                if (VARIABLE.state == ServerState.Free)
-                {
-                    return VARIABLE;
-                }
-            }
-        }
-
-
         IServer server = (IServer)RefPooled.Spawner(type);
         servers.AddOrUpdate(server, new List<IChannelId>() { id }, (k, v) =>
         {

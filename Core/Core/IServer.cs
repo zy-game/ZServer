@@ -16,9 +16,6 @@ public interface IServer : IReference
 {
     uint id { get; }
 
-    ServerState state { get; }
-
-
     /// <summary>
     /// 启动服务
     /// </summary>

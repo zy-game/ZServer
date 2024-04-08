@@ -70,3 +70,6 @@ E:\ZServer\GameDemo\obj\Debug\net6.0\ref\GameDemo.dll
 E:\ZServer\GameDemo\bin\Debug\net6.0\protobuf-net.dll
 E:\ZServer\GameDemo\bin\Debug\net6.0\protobuf-net.Core.dll
 E:\ZServer\GameDemo\bin\Debug\net6.0\System.Collections.Immutable.dll
+D:\ZGame\ZServer\GameDemo\bin\Debug\net6.0\protobuf-net.dll
+D:\ZGame\ZServer\GameDemo\bin\Debug\net6.0\protobuf-net.Core.dll
+D:\ZGame\ZServer\GameDemo\bin\Debug\net6.0\System.Collections.Immutable.dll

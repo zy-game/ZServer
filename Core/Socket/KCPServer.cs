@@ -96,28 +96,26 @@ public class KCPServer
         public override async void ChannelRead(IChannelHandlerContext context, object message)
         {
             _channel = context.Channel;
-            var packet = message as DatagramPacket;
-            Recipient = packet.Recipient;
-            Sender = packet.Sender;
+            var datagramPacket = message as DatagramPacket;
+            Recipient = datagramPacket.Recipient;
+            Sender = datagramPacket.Sender;
             if (clients.TryGetValue(context.Channel.Id, out var client) is false)
             {
                 clients.Add(context.Channel.Id, client = Client.Create(context.Channel.Id, this));
             }
 
-            Packet frame = Packet.Deserialized(packet.Content.Array);
-            App.Log(client.id + "Receive Message:" + frame.opcode);
+            var packet = Packet.Deserialized(datagramPacket.Content.Array);
+            // App.Log(string.Format($"{client.id} | Receive Message | {packet.opcode}"));
             IServer server = App.GetServer(client.id);
             if (server is null)
             {
-                App.Log("get free server");
-                server = await App.GetFreeServer(client.id);
+                server = await App.NewServer(client.id);
             }
 
-            App.Log(client.id + "execute message:" + frame.opcode);
-            await server.OnMessage(client.id, frame.opcode, frame.Data);
-            RefPooled.Release(frame);
-            if (packet != null)
-                packet.Release();
+            await server.OnMessage(client.id, packet.opcode, packet.Data);
+            RefPooled.Release(packet);
+            if (datagramPacket != null)
+                datagramPacket.Release();
         }
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
