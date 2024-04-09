@@ -14,7 +14,7 @@ public enum ServerState : byte
 /// </summary>
 public interface IServer : IReference
 {
-    uint id { get; }
+    int id { get; }
 
     /// <summary>
     /// 启动服务
@@ -33,7 +33,7 @@ public interface IServer : IReference
     /// </summary>
     /// <param name="messaged"></param>
     /// <returns></returns>
-    Task OnMessage(IChannelId cid, int opcode, byte[] messaged);
+    Task OnMessage(Client client, int opcode, byte[] messaged);
 
     /// <summary>
     /// 固定帧轮询

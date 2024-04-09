@@ -101,13 +101,13 @@ public class Join : IMessaged
             {
                 bw.Write(uid);
                 bw.Write(path);
-                bw.Write(position.x.RawValue);
-                bw.Write(position.y.RawValue);
-                bw.Write(position.z.RawValue);
-                bw.Write(rotation.x.RawValue);
-                bw.Write(rotation.y.RawValue);
-                bw.Write(rotation.z.RawValue);
-                bw.Write(rotation.w.RawValue);
+                bw.Write(position.x.AsLong());
+                bw.Write(position.y.AsLong());
+                bw.Write(position.z.AsLong());
+                bw.Write(rotation.x.AsLong());
+                bw.Write(rotation.y.AsLong());
+                bw.Write(rotation.z.AsLong());
+                bw.Write(rotation.w.AsLong());
                 return ms.ToArray();
             }
         }
@@ -121,13 +121,13 @@ public class Join : IMessaged
             {
                 bw.Write(data.uid);
                 bw.Write(data.path);
-                bw.Write(data.position.x.RawValue);
-                bw.Write(data.position.y.RawValue);
-                bw.Write(data.position.z.RawValue);
-                bw.Write(data.rotation.x.RawValue);
-                bw.Write(data.rotation.y.RawValue);
-                bw.Write(data.rotation.z.RawValue);
-                bw.Write(data.rotation.w.RawValue);
+                bw.Write(data.position.x.AsLong());
+                bw.Write(data.position.y.AsLong());
+                bw.Write(data.position.z.AsLong());
+                bw.Write(data.rotation.x.AsLong());
+                bw.Write(data.rotation.y.AsLong());
+                bw.Write(data.rotation.z.AsLong());
+                bw.Write(data.rotation.w.AsLong());
                 return ms.ToArray();
             }
         }
@@ -342,7 +342,7 @@ public class InputData : IReference
                 foreach (var item in data.fpList)
                 {
                     bw.Write(item.Key);
-                    bw.Write((float)item.Value);
+                    bw.Write(item.Value.AsLong());
                 }
 
                 return ms.ToArray();
@@ -367,7 +367,7 @@ public class InputData : IReference
                 inputData.fpList = new Dictionary<byte, FP>();
                 for (int i = 0; i < count; i++)
                 {
-                    inputData.fpList.Add(br.ReadByte(), br.ReadSingle());
+                    inputData.fpList.Add(br.ReadByte(), br.ReadInt64());
                 }
 
                 return inputData;

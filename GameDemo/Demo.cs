@@ -15,7 +15,7 @@ public enum RoomState
 
 public class Demo : IServer
 {
-    public uint id { get; set; } = ID.Generic();
+    public int id { get; set; } = Guid.NewGuid().GetHashCode();
     private int tick = 0;
     private List<UserData> clients = new();
     private Queue<FrameData> syncQueue = new();
@@ -25,7 +25,10 @@ public class Demo : IServer
     class UserData
     {
         public uint uid;
-        public IChannelId cid;
+        public int cid;
+        public string path;
+        public TSVector pos;
+        public TSQuaternion rot;
         public FrameData Frame;
         public bool isReady;
     }
@@ -51,18 +54,18 @@ public class Demo : IServer
         return Task.FromResult(Status.Success);
     }
 
-    public Task OnMessage(IChannelId cid, int opcode, byte[] messaged)
+    public Task OnMessage(Client client, int opcode, byte[] messaged)
     {
         switch ((SyncCode)opcode)
         {
             case SyncCode.JOIN:
-                OnUserJoin(Join.Decode(messaged), cid);
+                OnUserJoin(Join.Decode(messaged), client);
                 break;
             case SyncCode.LEAVE:
                 OnUserLeave(Leave.Decode(messaged));
                 break;
             case SyncCode.SYNC:
-                OnSyncData(FrameData.Decode(messaged), cid);
+                OnSyncData(FrameData.Decode(messaged), client);
                 break;
             case SyncCode.READY:
                 OnUserReady(Ready.Decode(messaged));
@@ -82,36 +85,59 @@ public class Demo : IServer
 
         App.Log("玩家准备：" + ready.uid);
         user.isReady = !user.isReady;
-        KCPServer.Broadcast((int)SyncCode.READY, Ready.Encode(ready), clients.Select(x => x.cid).ToArray());
-        if (state == RoomState.Ready && clients.All(x => x.isReady))
+        App.Broadcast((int)SyncCode.READY, Ready.Encode(ready));
+        if (state == RoomState.Ready && clients.All(x => x.isReady) && clients.Count == count)
         {
             state = RoomState.Running;
-            KCPServer.Broadcast((int)SyncCode.START, StartGame.Encode(null), clients.Select(x => x.cid).ToArray());
+            App.Broadcast((int)SyncCode.START, StartGame.Encode(null));
+            App.Log("游戏开始");
         }
     }
 
-    private void OnUserJoin(Join join, IChannelId cid)
+    private void OnUserJoin(Join join, Client client)
     {
         UserData user = clients.Find(x => x.uid == join.uid);
+        if (user is not null)
+        {
+            clients.Remove(user);
+        }
+
+        user = new UserData();
+        user.cid = client.cid;
+        user.isReady = false;
+        user.path = join.path;
+        user.pos = new TSVector(clients.Count * 5, 2, 0);
+        user.rot = join.rotation;
+        clients.Add(user);
+        App.Broadcast((int)SyncCode.JOIN, Join.Create(user.uid, user.path, user.pos, user.rot));
+        for (int i = 0; i < clients.Count; i++)
+        {
+            if (clients[i].uid == join.uid)
+            {
+                continue;
+            }
+
+            client.Write((int)SyncCode.JOIN, Join.Create(clients[i].uid, clients[i].path, clients[i].pos, clients[i].rot));
+        }
+
         App.Log("玩家进入：" + join.uid);
-        clients.Add(user = new UserData() { cid = cid, uid = join.uid });
-        KCPServer.Broadcast((int)SyncCode.JOIN, Join.Encode(join), clients.Select(x => x.cid).ToArray());
     }
 
     private void OnUserLeave(Leave leave)
     {
-        if (state is RoomState.Ready)
+        clients.Remove(clients.Find(x => x.uid == leave.uid));
+        if (clients.Count == 0)
         {
-            clients.Remove(clients.Find(x => x.uid == leave.uid));
+            Release();
         }
 
         App.Log("玩家离开：" + leave.uid);
-        KCPServer.Broadcast((int)SyncCode.LEAVE, Leave.Encode(leave), clients.Select(x => x.cid).ToArray());
+        App.Broadcast((int)SyncCode.LEAVE, Leave.Encode(leave));
     }
 
-    private void OnSyncData(FrameData frame, IChannelId cid)
+    private void OnSyncData(FrameData frame, Client client)
     {
-        UserData user = clients.Find(x => x.cid == cid);
+        UserData user = clients.Find(x => x.cid == client.cid);
         if (user is null)
         {
             return;
@@ -146,13 +172,16 @@ public class Demo : IServer
             frame.SetInputData(input);
         }
 
-        App.Log(frame.ToString());
         AddSync(frame);
-        KCPServer.Broadcast((int)SyncCode.SYNC, FrameData.Encode(frame), clients.Select(x => x.cid).ToArray());
+        App.Broadcast((int)SyncCode.SYNC, FrameData.Encode(frame));
     }
 
 
     public void Release()
     {
+        state = RoomState.Ready;
+        tick = 0;
+        syncQueue.Clear();
+        App.Log("重置房间");
     }
 }
