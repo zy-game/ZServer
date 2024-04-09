@@ -40,3 +40,9 @@ public interface IServer : IReference
     /// </summary>
     void FixedUpdate();
 }
+
+public interface IRoom : IReference
+{
+    int rid { get; }
+    
+}
