@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameDemo", "GameDemo\GameDemo.csproj", "{973F2E95-D8BE-4CE5-ADF4-96C94E8E208E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QQRobot", "QQRobot\QQRobot.csproj", "{9835AA25-AFFF-4216-A46B-174725764D11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{973F2E95-D8BE-4CE5-ADF4-96C94E8E208E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{973F2E95-D8BE-4CE5-ADF4-96C94E8E208E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{973F2E95-D8BE-4CE5-ADF4-96C94E8E208E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9835AA25-AFFF-4216-A46B-174725764D11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9835AA25-AFFF-4216-A46B-174725764D11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9835AA25-AFFF-4216-A46B-174725764D11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9835AA25-AFFF-4216-A46B-174725764D11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

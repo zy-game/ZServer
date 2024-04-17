@@ -14,6 +14,9 @@
     <PackageReference Include="MemoryPack" Version="1.21.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="protobuf-net" Version="3.2.30" />
+    <PackageReference Include="TouchSocket" Version="2.0.3" />
+    <PackageReference Include="TouchSocket.Core.DependencyInjection" Version="2.0.3" />
+    <PackageReference Include="TouchSocket.Http" Version="2.0.3" />
   </ItemGroup>
 
   <ItemGroup>
