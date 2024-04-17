@@ -7,3 +7,11 @@
 /Core/obj
 /WebApi/obj
 /Core/obj
+WebApi/bin
+WebApi/obj
+GameDemo/bin
+GameDemo/obj
+Core/bin
+Core/obj
+.vs
+.idea
