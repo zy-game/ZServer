@@ -1,84 +1,78 @@
-﻿using System.Net;
-using DotNetty.Buffers;
-using DotNetty.Transport.Channels;
+using ZGame.Networking;
+using ZGame.Room;
 
-namespace ZServer;
+namespace ZGame;
 
-public interface IWriteable
+public enum UserState : byte
 {
-    void Write(Client client, byte[] bytes);
+    None,
+    Ready,
+    Prepare,
+    Gaming,
 }
 
-public class Client : IReference
+public sealed class Client : IReference
 {
-    private IWriteable _channel;
-    private DateTime heartbeatTime;
-    private int timeoutCount = 0;
-    private const int MAX_TIMEOUT_COUNT = 3;
+    private INetClient _net;
 
-    /// <summary>
-    /// 网络链接ID
-    /// </summary>
-    public int cid { get; private set; }
-
-    /// <summary>
-    /// 发送地址
-    /// </summary>
-    public EndPoint Sender { get; private set; }
-
-    /// <summary>
-    /// 接收地址
-    /// </summary>
-    public EndPoint Recipient { get; private set; }
-
-
-    /// <summary>
-    /// 发送数据
-    /// </summary>
-    /// <param name="messaged"></param>
-    public void Write(byte[] messaged)
+    public int cid
     {
-        _channel.Write(this, messaged);
+        get { return _net == null ? 0 : _net.cid; }
     }
 
-    public void Write(int opcde, byte[] bytes)
+    public bool isOnline => _net.isConnected;
+    public uint uid { get; set; }
+    public UserState state { get; set; }
+    public RoomBase room { get; private set; }
+
+    public void Send(byte[] bytes)
     {
-        Write(Packet.Create(opcde, bytes));
+        if (_net.isConnected is false)
+        {
+            return;
+        }
+
+        _net.Write(bytes);
     }
+
+
+    public void JoinRoom(RoomBase room)
+    {
+        if (this.room is not null)
+        {
+            AppCore.Log(("玩家已经在房间中"));
+            return;
+        }
+
+        this.room = room;
+        room.OnJoin(this);
+    }
+
+    public void LeaveRoom()
+    {
+        if (room is null)
+        {
+            return;
+        }
+
+
+        room.OnLeave(this);
+        room = null;
+    }
+
 
     public void Release()
     {
-        _channel = null;
-        Recipient = null;
-        Sender = null;
-        cid = 0;
+        _net = null;
+        room = null;
+        uid = 0;
+        state = UserState.None;
     }
 
-    public bool Timeout()
+    public static Client Create(INetClient net)
     {
-        if (DateTime.Now - heartbeatTime < TimeSpan.FromSeconds(20))
-        {
-            return false;
-        }
-
-        timeoutCount++;
-        return timeoutCount >= MAX_TIMEOUT_COUNT;
-    }
-
-    public void RefreshHeartbeat()
-    {
-        timeoutCount = 0;
-        heartbeatTime = DateTime.Now + TimeSpan.FromSeconds(20);
-    }
-
-    public static Client Create(int cid, IWriteable adapter, EndPoint Sender, EndPoint Recipient)
-    {
-        Client client = RefPooled.Spawner<Client>();
-        client.cid = cid;
-        client._channel = adapter;
-        client.Sender = Sender;
-        client.Recipient = Recipient;
-        client.heartbeatTime = DateTime.Now;
+        Client client = RefPooled.Alloc<Client>();
+        client._net = net;
         return client;
     }
 }

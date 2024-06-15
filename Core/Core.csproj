@@ -3,8 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootNamespace>ZServer</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +24,10 @@
     <Reference Include="reedsolomon_csharp">
       <HintPath>..\reedsolomon_csharp.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Room\" />
   </ItemGroup>
 
 </Project>

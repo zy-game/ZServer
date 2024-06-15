@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <title>EasyMDE</title>
+    <link rel="stylesheet" href="src/layui/css/layui.css" />
+    <link rel="stylesheet" href="easymde-layui/mods/easymde/css/easymde.min.css" />
+    <style>
+      .CodeMirror {
+			height: 500px;
+      }
+    </style>
+  </head>
+
+  <body class="layui-layout-body">
+    <button class="get-content">获取编辑器文本</button>
+    <button class="get-html-content">获取编辑器内容HTML</button>
+	<button class="layui-btn layui-btn-normal get-textarea">
+	  获取文本域内容
+	</button>
+
+    <div class="layui-fluid" style="margin: 100px 200px;">
+      <textarea id="detail"></textarea>
+    </div>
+
+    <script src="src/layui/layui.js"></script>
+    <script>
+      layui.config({
+		 base: "easymde-layui/mods/",
+      }).extend({
+			easymde:'easymde/easymde',
+		});
+	  
+      //JavaScript代码区域
+      layui.use(["easymde"], function () {
+        const easymde = layui.easymde;
+        const $ = layui.$;
+
+        const mde = easymde.init({
+          element: document.getElementById("detail"), //文本域ID
+          autosave: {
+            enabled: true, //开启自动保存
+            uniqueId: "MyUniqueID", //唯一ID值，通过唯一ID值进行保存编写记录
+            delay: 1000, //多少毫秒保存一次
+          },
+          promptURLs: true, // 如果设置为true，则会显示一个JS警报窗口，要求提供链接或图像URL。默认为false。
+          renderingConfig: {
+            codeSyntaxHighlighting: true, //开启代码高亮
+          },
+          placeholder: "|",
+          //status: ["autosave", "lines", "words","cursor"], //设置为false 则禁用状态栏 默认为true 开启所有
+          toolbar: [
+            //展示所有工具栏,如果不指定有默认的选项。
+            "bold", //黑体
+            "italic", //斜体
+            "strikethrough", //删除线
+            "heading", //标题
+            "heading-smaller", //缩小标题
+            "heading-bigger", // 增大标题
+            "heading-1", //小标题
+            "heading-2", //中标题
+            "heading-3", //大标题
+            "|", //分割线
+            "code", // 代码块
+            "quote", //引用
+            "unordered-list", // 无序列表
+            "ordered-list", // 有序列表
+            "clean-block", // 清除块样式
+            "|", //分割线
+            "link", //添加超链接
+            "image", //添加图片
+            "table", //添加表格
+            "horizontal-rule", // 水平线
+            "|",
+            "preview", //全屏预览
+            "side-by-side", //分屏预览
+            "fullscreen", //全屏
+            "|", //分割线
+            "undo", //清空
+            "redo", // 重做
+            "guide", // 说明
+          ],
+        });
+
+        $(".get-content").on("click", function () {
+          console.log(easymde.value());
+          alert(easymde.value());
+        });
+
+        $(".get-html-content").on("click", function () {
+          console.log(easymde.html());
+          // 使用layer会把html代码作为页面展示
+          //layer.alert(easymde.html());
+          alert(easymde.html());
+        });
+
+$(".get-textarea").on("click", function () {
+			alert($("#detail").text());
+		});
+
+      });
+	  
+    </script>
+  </body>
+</html>

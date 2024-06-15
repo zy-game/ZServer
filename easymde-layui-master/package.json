@@ -1,0 +1,52 @@
+{
+  "name": "easymde",
+  "version": "1.0",
+  "description": "一个简单漂亮的富文本编辑器",
+  "keywords": [
+    "embeddable",
+    "markdown",
+    "editor",
+    "javascript",
+    "wysiwyg"
+  ],
+  "homepage": "https://gitee.com/chengliang4810/easymde.git",
+  "main": "./src/js/easymde.js",
+  "license": "apache 2.0",
+  "company": "Next Step Webs, Inc.",
+  "author": {
+    "name": "cheng liang",
+    "url": "https://gitee.com/chengliang4810/easymde.git"
+  },
+  "bugs": {
+    "url": "https://gitee.com/chengliang4810/easymde/issues/new"
+  },
+  "dependencies": {
+    "codemirror": "*",
+    "codemirror-spell-checker": "*",
+    "gulp-cli": "^4.0.2",
+    "marked": "*",
+    "orchestrator": "^0.3.8"
+  },
+  "devDependencies": {
+    "browserify": "*",
+    "debug": "*",
+    "eslint": "*",
+    "gulp": "^4.0.2",
+    "gulp-clean": "*",
+    "gulp-clean-css": "*",
+    "gulp-concat": "*",
+    "gulp-debug": "*",
+    "gulp-eslint": "*",
+    "gulp-header": "*",
+    "gulp-jsbeautifier": "*",
+    "gulp-rename": "*",
+    "gulp-uglify": "*",
+    "gulp-util": "^3.0.8",
+    "vinyl-buffer": "*",
+    "vinyl-source-stream": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/chengliang4810/easymde"
+  }
+}

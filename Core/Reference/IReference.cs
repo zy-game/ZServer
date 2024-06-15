@@ -1,10 +1,10 @@
-﻿namespace ZServer;
+﻿namespace ZGame;
 
 public interface IReference : IDisposable
 {
     void IDisposable.Dispose()
     {
-        RefPooled.Release(this);
+        RefPooled.Free(this);
     }
 
     void Release();

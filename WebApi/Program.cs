@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using WebApi;
-using ZServer;
+using ZGame;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -13,8 +13,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseHttpsRedirection();
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+// app.UseHttpsRedirection();
 //app.UseAuthentication();
 //app.UseAuthorization();
 app.MapControllers();

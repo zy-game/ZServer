@@ -1,0 +1,13 @@
+localtesting/
+node_modules/
+bower_components/
+bak/
+
+gulpfile-*.js
+#For IDE
+*.iml
+*.ipr
+*.iws
+.idea/
+.DS_Store
+.vscode/settings.json

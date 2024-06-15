@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="layui/css/layui.css" />
+	<link rel="stylesheet" type="text/css" href="../easymde-layui/mods/easymde/css/easymde.min.css"/>
+	
+    <style>
+	  .CodeMirror{
+		  height: 500px;
+	  }
+      .get-content,
+      .get-html-content {
+        margin: 15px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <button class="layui-btn layui-btn-normal get-content">
+      获取编辑器文本
+    </button>
+    <button class="layui-btn layui-btn-normal get-html-content">
+      获取编辑器内容HTML
+    </button>
+	<button class="layui-btn layui-btn-normal get-html-number">
+	  获取编辑器文字数量
+	</button>
+	
+	<button class="layui-btn layui-btn-normal get-textarea">
+	  获取文本域内容
+	</button>
+	
+    <textarea id="detail"></textarea>
+
+    <!-- 编辑器JS -->
+	 <script src="layui/layui.js"></script>
+	 <script src="js/highlight-min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/codemirror.js"></script>
+    <script src="js/continuelist.js"></script>
+    <script src="js/tablist.js"></script>
+    <script src="js/fullscreen.js"></script>
+    <script src="js/markdown.js"></script>
+    <script src="js/overlay.js"></script>
+    <script src="js/placeholder.js"></script>
+    <script src="js/markdown.js"></script>
+    <script src="js/gfm.js"></script>
+    <script src="js/xml.js"></script>
+    <script src="js/typo.js"></script>
+     <script src="js/spell-checker.js"></script>
+    <script src="js/marked.js"></script>
+   
+
+    <script>
+	//全局配置
+      layui.config({
+        base: "mods/", //假设这是你存放拓展模块的根目录
+      }).extend({
+			easymde:'easymde/easymde',
+	  })
+		
+      layui.use(["easymde", "jquery"], function () {
+        var easymde = layui.easymde;
+        const $ = layui.jquery;
+		
+        easymde.init({
+          element: $('#detail')[0], //文本域ID document.getElementById("detail")
+          shortcut: false, //是否开启快捷键
+          upload: {
+            url: "http://localhost:9999/file/upload", //默认url /file/upload
+            size: 500,
+            response: {
+              status: "status", //上传成功状态字段
+              successStatus: 200, //上传成功状态码 200 代表上传成功
+              url: "url", // 获取图片URL地址字段
+              msg: "msg", // 上传失败描述信息字段
+              //msg: "文件上传失败请重试", 上传失败描述信息文字
+            },
+            // 后台返回的json结果例子
+            //{"url":"http://up.enterdesk.com/edpic/1f/8b/21/1f8b214977bece92c90ea3d94033f32e.jpg","status":200}
+          }, //图片上传参数
+          //autosave: {
+          //enabled: true, //开启自动保存 默认开启
+          //uniqueId: "MyUniqueID", //唯一ID值，通过唯一ID值进行保存编写记录,建议设置用户ID用来区分，可能出现同一浏览器登录不同用户的情况。
+          //delay: 2000, //多少毫秒保存一次 默认五秒保存一次
+          //show: false, //是否显示
+          //},
+          autosave: true, //自动保存 可以直接true/false 开启或关闭 默认 true
+		  //preview: true, // 进入编辑器后默认打开预览 默认false 
+          placeholder: "|",
+          //status: ["autosave", "lines", "words","cursor"], //设置为false 则禁用状态栏 默认为true 开启所有
+          toolbar: [
+            //所有工具栏
+            "bold", //黑体
+            "italic", //斜体
+            "strikethrough", //删除线
+            "heading", //标题
+            "heading-smaller", //缩小标题
+            "heading-bigger", // 增大标题
+            "heading-1", //小标题
+            "heading-2", //中标题
+            "heading-3", //大标题
+            "|", //分割线
+            "code", // 代码块
+            "quote", //引用
+            "unordered-list", // 无序列表
+            "ordered-list", // 有序列表
+            "clean-block", // 清除块样式
+            "|", //分割线
+            "link", //添加超链接
+            "image", //添加图片
+            "table", //添加表格
+            "horizontal-rule", // 水平线
+            "|",
+            "preview", //全屏预览
+            "side-by-side", //分屏预览
+            "fullscreen", //全屏
+            "|", //分割线
+            "undo", //清空
+            "redo", // 重做
+            "guide", // 说明
+          ],
+        });
+		
+		// easymde.togglePreview();
+
+        $(".get-content").on("click", function () {
+			alert(easymde.value());
+        });
+
+        $(".get-html-content").on("click", function () {
+			alert(easymde.html());
+        });
+		
+		$(".get-html-number").on("click", function () {
+			alert(easymde.wordNumber());
+		});
+		
+		$(".get-textarea").on("click", function () {
+			alert($("#detail").text());
+		});
+      });
+    </script>
+   
+  </body>
+</html>
